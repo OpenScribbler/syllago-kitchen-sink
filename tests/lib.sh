@@ -169,7 +169,7 @@ assert_golden() {
     fail "$description (output differs from golden file)"
     echo "    --- expected (golden)"
     echo "    +++ actual"
-    diff <(echo "$golden_norm") <(echo "$actual_norm") | head -20 | sed 's/^/    /'
+    diff <(echo "$golden_norm") <(echo "$actual_norm") | head -20 | sed 's/^/    /' || true
   fi
 }
 
