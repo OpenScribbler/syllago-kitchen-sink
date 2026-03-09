@@ -18,7 +18,7 @@ while [[ $# -gt 0 ]]; do
       echo ""
       echo "Flags:"
       echo "  --seed          Pre-seed library (skip add tests for faster runs)"
-      echo "  --suite <name>  Run only one suite: discovery, add, install, convert"
+      echo "  --suite <name>  Run only one suite: discovery, add, install, convert, roundtrip"
       exit 0
       ;;
     *) echo "Unknown flag: $1"; exit 1 ;;
@@ -55,6 +55,7 @@ if [[ -z "$SUITE" ]]; then
   run_suite add
   run_suite install
   run_suite convert
+  run_suite roundtrip
 else
   run_suite "$SUITE"
 fi
