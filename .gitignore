@@ -1,0 +1,12 @@
+# tests/run.sh creates temp dirs here
+/tmp-test-*/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*~
+.idea/
+.vscode/
