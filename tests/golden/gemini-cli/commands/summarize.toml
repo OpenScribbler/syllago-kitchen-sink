@@ -1,0 +1,2 @@
+description = 'Summarize content in bullet points'
+prompt = 'Summarize the provided content in 3-5 bullet points, focusing on key decisions, action items, and open questions.'

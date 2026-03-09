@@ -1,0 +1,11 @@
+{
+  "name": "code-reviewer",
+  "description": "Review code changes for quality and security issues",
+  "prompt": "file://./prompts/code-reviewer.md",
+  "tools": [
+    "read",
+    "read",
+    "read",
+    "shell"
+  ]
+}

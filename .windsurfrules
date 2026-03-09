@@ -1,0 +1,6 @@
+---
+trigger: always_on
+description: Security best practices for all code
+---
+
+All code must validate user input at system boundaries. Never trust external data. Use parameterized queries for database access. Sanitize HTML output to prevent XSS.
