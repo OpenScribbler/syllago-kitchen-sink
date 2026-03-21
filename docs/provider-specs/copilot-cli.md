@@ -2,60 +2,45 @@
 
 Provider slug: `copilot-cli`
 
-Supports: Rules, Commands, Agents, Hooks, MCP
+Supports: Rules, Skills, Agents, Hooks, MCP
 
-Sources: [GitHub Copilot Docs](https://docs.github.com/en/copilot), [Custom Agents](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
+Sources: [GitHub Copilot Docs](https://docs.github.com/en/copilot), [Custom Agents](https://docs.github.com/en/copilot/reference/custom-agents-configuration), [Skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills), [Hooks](https://docs.github.com/en/copilot/reference/hooks-configuration)
 
 ---
 
 ## Rules
 
-**Location:** `.github/copilot-instructions.md` (project root)
+**Location:** `.github/copilot-instructions.md` (repo-wide), `.github/instructions/*.instructions.md` (path-specific), `AGENTS.md`/`CLAUDE.md`/`GEMINI.md` (agent instructions)
 
-**Format:** Plain markdown (no frontmatter)
+**Personal location:** `~/.copilot/copilot-instructions.md`
 
-**Schema:** Single-file, always-active. No conditional activation, globs, or per-rule descriptions.
+**Format:** Plain markdown; path-specific instructions use YAML frontmatter with `applyTo` glob
 
-**Example:**
-
-```markdown
-# Project Conventions
-
-Use TypeScript strict mode in all files.
-Always write tests for new features.
-```
-
----
-
-## Commands
-
-**Location:** `.copilot/commands/<name>.md` (project) or `~/.copilot/commands/<name>.md` (user)
-
-**Format:** YAML frontmatter + markdown body (Claude Code compatible format)
-
-**Fields:**
+**Path-specific frontmatter fields:**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `description` | string | No | One-line description |
+| `applyTo` | string | Yes | Glob pattern (e.g., `"**/*.py"`) |
+| `excludeAgent` | string | No | `"code-review"` or `"coding-agent"` |
 
-**Body:** Markdown instructions sent to the model.
-
-**Example:**
+**Example (path-specific):**
 
 ```markdown
 ---
-description: Review staged changes
+applyTo: "**/*.py"
 ---
 
-Review the current staged changes and provide feedback on code quality.
+Use type hints on all function signatures.
+Prefer dataclasses over plain dicts for structured data.
 ```
 
 ---
 
-## Agents
+## Skills
 
-**Location:** `.copilot/agents/<name>.md`, `.github/agents/<name>.md`, or `.claude/agents/<name>.md` (compatibility fallback)
+**Location:** `.github/skills/<name>/SKILL.md` (project) or `~/.copilot/skills/<name>/SKILL.md` (user)
+
+**Cross-tool compatible:** `.claude/skills/<name>/SKILL.md` and `.agents/skills/<name>/SKILL.md` are also auto-discovered.
 
 **Format:** YAML frontmatter + markdown body
 
@@ -63,93 +48,145 @@ Review the current staged changes and provide feedback on code quality.
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `name` | string | No | Display name |
-| `description` | string | Yes | Purpose and capabilities |
-| `tools` | string[] | No | Tool allowlist (or `["*"]` for all) |
-| `disable-model-invocation` | bool | No | Prevent auto-delegation |
-| `target` | string | No | `vscode` or `github-copilot` (runtime-only, safe to drop) |
-| `mcp-servers` | object | No | Inline MCP server configs |
-| `metadata` | object | No | Key-value annotations (safe to drop) |
+| `name` | string | Yes | Lowercase, hyphens. Typically matches directory name. |
+| `description` | string | Yes | What the skill does and when to use it |
+| `license` | string | No | Applicable license |
+
+**Invocation:** `/skill-name` in a prompt, or auto-loaded based on `description`.
 
 **Example:**
 
 ```markdown
 ---
-description: Security review agent that checks code for vulnerabilities
-tools:
-  - view
-  - glob
-  - rg
+name: frontend-design
+description: Use this skill when creating or modifying React UI components.
 ---
 
-You are a security review agent. Analyze code for:
-- OWASP Top 10 vulnerabilities
-- Hardcoded secrets
-- Injection risks
+## Guidelines
+
+1. Use the project's design tokens from `src/tokens/`
+2. All interactive elements must have ARIA labels
+3. Prefer CSS modules over inline styles
+```
+
+---
+
+## Agents
+
+**Location:** `.github/agents/<name>.agent.md` (project) or `.github-private/agents/<name>.agent.md` (org/enterprise)
+
+**Naming:** `<agent-name>.agent.md` — filename constraints: `.`, `-`, `_`, `a-z`, `A-Z`, `0-9`
+
+**Format:** YAML frontmatter + markdown body (max 30,000 characters)
+
+**Frontmatter fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Identifier (defaults to filename without `.agent.md`) |
+| `description` | string | Yes | Brief explanation of agent capabilities |
+| `tools` | string[] | No | Tool names/aliases. Omit for all tools. Empty `[]` disables all. |
+| `mcp-servers` | object | No | MCP server config specific to this agent |
+| `model` | string | No | AI model to use |
+| `target` | string | No | `"vscode"` or `"github-copilot"` (runtime-only, safe to drop) |
+
+**Tool references:** Built-in tools or MCP server tools: `["read", "edit", "search", "some-mcp-server/tool-1"]`
+
+**Example:**
+
+```markdown
+---
+name: api-reviewer
+description: Reviews API endpoint implementations for REST conventions, error handling, and security.
+tools: ["read", "search"]
+model: gpt-4o
+---
+
+You are an API review specialist. When asked to review code:
+
+1. Check REST naming conventions
+2. Verify error responses use standard HTTP status codes
+3. Ensure authentication middleware is applied
+4. Flag any SQL injection or XSS vulnerabilities
 ```
 
 ---
 
 ## Hooks
 
-**Location:** `.copilot/hooks.json` (project) or `~/.copilot/hooks.json` (user)
+**Location:** `.github/hooks/<name>.json` (CLI loads from cwd; coding agent loads from default branch)
 
 **Format:** JSON
 
-**Top-level structure:**
+**Root schema:**
 
 ```json
 {
+  "version": 1,
   "hooks": {
-    "<eventName>": [
-      {
-        "bash": "shell-command",
-        "timeoutSec": 5,
-        "comment": "What this hook does"
-      }
-    ]
+    "sessionStart": [...],
+    "sessionEnd": [...],
+    "userPromptSubmitted": [...],
+    "preToolUse": [...],
+    "postToolUse": [...],
+    "errorOccurred": [...]
   }
 }
 ```
 
 **Hook event types:**
 
-| Event | Description |
-|-------|-------------|
-| `preToolUse` | Before tool execution |
-| `postToolUse` | After tool execution |
-| `userPromptSubmitted` | After user prompt, before agent |
-| `sessionStart` | Session begins |
-| `sessionEnd` | Session ends |
+| Event | Can Block | Description |
+|-------|-----------|-------------|
+| `sessionStart` | No | New/resumed session |
+| `sessionEnd` | No | Session completes |
+| `userPromptSubmitted` | No | User enters a prompt |
+| `preToolUse` | Yes | Before tool execution (only blocking hook) |
+| `postToolUse` | No | After tool execution |
+| `errorOccurred` | No | Error during session |
 
-**Hook entry fields:**
+**Hook definition fields:**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `bash` | string | Yes* | Bash command to execute |
-| `powershell` | string | Yes* | PowerShell command (Windows) |
-| `timeoutSec` | int | No | Timeout in seconds |
-| `comment` | string | No | Description of hook purpose |
+| `type` | `"command"` | Yes | Hook type |
+| `bash` | string | Conditional | Script path or inline command (Linux/macOS) |
+| `powershell` | string | Conditional | Script path or inline command (Windows) |
+| `cwd` | string | No | Working directory for the script |
+| `timeoutSec` | number | No | Timeout in seconds (default: 30) |
+| `comment` | string | No | Human-readable description |
 
-*One of `bash` or `powershell` required.
+At least one of `bash` or `powershell` required.
+
+**preToolUse output (blocking):**
+
+```json
+{
+  "permissionDecision": "allow|deny|ask",
+  "permissionDecisionReason": "Reason string"
+}
+```
 
 **Key differences from Claude Code/Gemini CLI:**
-- No matcher support (hooks apply to all tools in an event)
+- Separate JSON files in `.github/hooks/` (not embedded in settings.json)
+- Requires `"version": 1` field
 - Timeout in seconds (not milliseconds)
-- `comment` instead of `statusMessage`
 - `bash`/`powershell` instead of `command`
-- No `type: "prompt"` or `type: "agent"` (LLM-evaluated hooks)
+- No matcher support (hooks apply to all tools in an event)
+- `preToolUse` is the only blocking hook; uses `permissionDecision` output format
 
 **Example:**
 
 ```json
 {
+  "version": 1,
   "hooks": {
     "preToolUse": [
       {
-        "bash": "echo '{\"decision\": \"allow\"}'",
+        "type": "command",
+        "bash": ".github/hooks/validate-tool.sh",
         "timeoutSec": 5,
-        "comment": "Auto-approve all tool use"
+        "comment": "Validate tool use before execution"
       }
     ]
   }
@@ -160,21 +197,30 @@ You are a security review agent. Analyze code for:
 
 ## MCP Servers
 
-**Location:** `.copilot/mcp.json` (project) or `~/.copilot/mcp.json` (user)
+**Location:** `~/.copilot/mcp-config.json` (global) or `.copilot/mcp-config.json` (project)
+
+**Session-only:** `--additional-mcp-config PATH` flag
 
 **Format:** JSON
 
-**Server entry fields:**
+**Server entry fields (STDIO):**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `command` | string | Conditional | Executable for stdio transport |
-| `args` | string[] | No | Arguments for command |
+| `type` | `"local"` or `"stdio"` | Yes | Transport type |
+| `command` | string | Yes | Executable to start |
+| `args` | string[] | No | Command arguments |
 | `env` | object | No | Environment variables |
-| `cwd` | string | No | Working directory |
-| `url` | string | Conditional | HTTP endpoint URL |
-| `headers` | object | No | Custom HTTP headers |
-| `type` | string | No | Transport type |
+| `tools` | string or string[] | No | `"*"` for all, or specific tool names |
+
+**Server entry fields (HTTP):**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | `"http"` | Yes | Transport type |
+| `url` | string | Yes | Remote endpoint URL |
+| `headers` | object | No | HTTP headers |
+| `tools` | string or string[] | No | Tool filter |
 
 **Tool name format:** `server/tool` (slash-separated, e.g., `github/search_repositories`)
 
@@ -183,10 +229,19 @@ You are a security review agent. Analyze code for:
 ```json
 {
   "mcpServers": {
-    "github": {
+    "playwright": {
+      "type": "local",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": { "GITHUB_TOKEN": "$GITHUB_TOKEN" }
+      "args": ["@playwright/mcp@latest"],
+      "env": {},
+      "tools": ["*"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
     }
   }
 }
@@ -203,4 +258,4 @@ You are a security review agent. Analyze code for:
 | `shell` | `Bash` | `run_shell_command` |
 | `glob` | `Glob` | `list_directory` |
 | `rg` | `Grep` | `grep_search` |
-| `task` | `Task` | — |
+| `task` | `Task` | -- |

@@ -68,7 +68,7 @@ convert_and_check "convert code-reviewer agent to codex" \
   code-reviewer codex "$GOLDEN_DIR/codex/agents/code-reviewer.toml"
 
 convert_and_check "convert code-reviewer agent to kiro" \
-  code-reviewer kiro "$GOLDEN_DIR/kiro/agents/code-reviewer.json"
+  code-reviewer kiro "$GOLDEN_DIR/kiro/agents/code-reviewer.md"
 
 convert_and_check "convert code-reviewer agent to copilot-cli" \
   code-reviewer copilot-cli "$GOLDEN_DIR/copilot-cli/agents/code-reviewer.md"
@@ -82,12 +82,21 @@ convert_and_check "convert code-reviewer agent to claude-code" \
 convert_and_check "convert code-reviewer agent to gemini-cli" \
   code-reviewer gemini-cli "$GOLDEN_DIR/gemini-cli/agents/code-reviewer.md"
 
+convert_and_check "convert code-reviewer agent to cursor" \
+  code-reviewer cursor "$GOLDEN_DIR/cursor/agents/code-reviewer.md"
+
 # -- Skills to providers that support them --
+convert_and_check "convert greeting skill to cursor" \
+  greeting cursor "$GOLDEN_DIR/cursor/skills/greeting/SKILL.md"
+
+convert_and_check "convert greeting skill to copilot-cli" \
+  greeting copilot-cli "$GOLDEN_DIR/copilot-cli/skills/greeting/SKILL.md"
+
 convert_and_check "convert greeting skill to kiro" \
   greeting kiro "$GOLDEN_DIR/kiro/steering/greeting.md"
 
 convert_and_check "convert greeting skill to opencode" \
-  greeting opencode "$GOLDEN_DIR/opencode/skill/greeting/SKILL.md"
+  greeting opencode "$GOLDEN_DIR/opencode/skills/greeting/SKILL.md"
 
 convert_and_check "convert greeting skill to gemini-cli" \
   greeting gemini-cli "$GOLDEN_DIR/gemini-cli/skills/greeting/SKILL.md"
@@ -95,7 +104,19 @@ convert_and_check "convert greeting skill to gemini-cli" \
 convert_and_check "convert greeting skill to claude-code" \
   greeting claude-code "$GOLDEN_DIR/claude-code/skills/greeting/SKILL.md"
 
+convert_and_check "convert greeting skill to windsurf" \
+  greeting windsurf "$GOLDEN_DIR/windsurf/skills/greeting/SKILL.md"
+
+convert_and_check "convert greeting skill to roo-code" \
+  greeting roo-code "$GOLDEN_DIR/roo-code/skills/greeting/SKILL.md"
+
+convert_and_check "convert greeting skill to codex" \
+  greeting codex "$GOLDEN_DIR/codex/skills/greeting/SKILL.md"
+
 # -- Commands to providers that support them --
+convert_and_check "convert summarize command to cursor" \
+  summarize cursor "$GOLDEN_DIR/cursor/commands/summarize.md"
+
 convert_and_check "convert summarize command to copilot-cli" \
   summarize copilot-cli "$GOLDEN_DIR/copilot-cli/commands/summarize.md"
 

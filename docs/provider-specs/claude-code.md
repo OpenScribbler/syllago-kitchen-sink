@@ -18,19 +18,17 @@ Sources: [Anthropic docs](https://docs.anthropic.com/en/docs/claude-code), [Clau
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `description` | string | No | When this rule should apply (used for auto-activation) |
-| `alwaysApply` | bool | No | `true` = always active, `false` = conditional |
-| `globs` | string[] | No | File patterns for scoped activation |
+| `paths` | string[] | No | Glob patterns for path-scoped loading. If omitted, rule loads unconditionally. |
 
-**Activation model:** Claude Code's `.claude/rules/` directory supports per-file rules with frontmatter. The root `CLAUDE.md` is always-active (no frontmatter). Rules without frontmatter default to always-apply.
+**Activation model:** Claude Code's `.claude/rules/` directory supports per-file rules with frontmatter. The root `CLAUDE.md` is always-active (no frontmatter). Rules without `paths` frontmatter load unconditionally at session start. Rules with `paths` load when Claude reads files matching the pattern.
+
+> **Note:** Syllago's canonical format uses `alwaysApply` and `globs` frontmatter fields internally. When installing to Claude Code, syllago converts these to the native `paths` field. When importing from Claude Code, `paths` is converted to `alwaysApply`/`globs`.
 
 **Example:**
 
 ```markdown
 ---
-description: TypeScript conventions for API routes
-alwaysApply: false
-globs:
+paths:
   - "src/api/**/*.ts"
 ---
 

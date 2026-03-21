@@ -2,9 +2,9 @@
 
 Provider slug: `roo-code`
 
-Supports: Rules, MCP, Agents (via custom modes)
+Supports: Rules, MCP, Agents (via custom modes), Skills
 
-Sources: [Roo Code custom instructions](https://docs.roocode.com/features/custom-instructions), [Roo Code MCP](https://docs.roocode.com/features/mcp/using-mcp-in-roo), [Roo Code custom modes](https://docs.roocode.com/features/custom-modes)
+Sources: [Roo Code custom instructions](https://docs.roocode.com/features/custom-instructions), [Roo Code MCP](https://docs.roocode.com/features/mcp/using-mcp-in-roo), [Roo Code custom modes](https://docs.roocode.com/features/custom-modes), [Roo Code skills](https://docs.roocode.com/features/skills)
 
 ---
 
@@ -120,12 +120,49 @@ groups:
 
 ---
 
+## Skills
+
+**Location:** `.roo/skills/<name>/SKILL.md` (project), `~/.roo/skills/<name>/SKILL.md` (global)
+
+**Cross-agent compat:** `.agents/skills/<name>/SKILL.md`
+
+**Mode-specific:** `.roo/skills-{mode-slug}/<name>/SKILL.md`
+
+**Format:** YAML frontmatter + markdown body
+
+**Frontmatter fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | 1-64 chars, lowercase letters/numbers/hyphens |
+| `description` | string | Yes | 1-1024 chars, specific enough for matching |
+
+**Loading:** Progressive disclosure — frontmatter at startup, full content on-demand via `read_file`.
+
+**Priority:** Project > global. `.roo/` > `.agents/`. Mode-specific > generic.
+
+**Built-in skills:** `create-mcp-server`, `create-mode`, `find-skills`
+
+**Example:**
+
+```markdown
+---
+name: my-skill
+description: What this skill does and when to use it
+---
+
+# Skill Instructions
+
+Detailed instructions that Roo follows when this skill is activated.
+```
+
+---
+
 ## Unsupported Content Types
 
 | Type | Notes |
 |------|-------|
 | Commands | Not supported |
-| Skills | Not supported |
 | Hooks | Not supported (Cline fork, no native hooks) |
 
 ---
@@ -145,9 +182,9 @@ Detection signals:
 | `Rules` | `.roo/rules/` and `.roo/rules-{mode}/` | Recursive markdown/text files |
 | `MCP` | `.roo/mcp.json` | JSON merge |
 | `Agents` | Custom modes (YAML/JSON) | Mode definitions |
-| `Commands` | Not supported | — |
-| `Skills` | Not supported | — |
-| `Hooks` | Not supported | — |
+| `Skills` | `.roo/skills/<name>/SKILL.md` | YAML frontmatter + markdown |
+| `Commands` | Not supported | -- |
+| `Hooks` | Not supported | -- |
 
 ---
 

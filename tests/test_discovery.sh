@@ -36,6 +36,10 @@ assert_output_contains "gemini-cli discovers summarize command" \
   "summarize" \
   syllago add --from gemini-cli --no-input
 
+assert_output_contains "gemini-cli discovers hooks" \
+  "Hooks" \
+  syllago add --from gemini-cli --no-input
+
 # -- Cursor --
 assert_output_contains "cursor discovers security rule" \
   "security" \
@@ -45,14 +49,38 @@ assert_output_contains "cursor discovers code-review rule" \
   "code-review" \
   syllago add --from cursor --no-input
 
+assert_output_contains "cursor discovers greeting skill" \
+  "greeting" \
+  syllago add --from cursor --no-input
+
+assert_output_contains "cursor discovers summarize command" \
+  "summarize" \
+  syllago add --from cursor --no-input
+
+assert_output_contains "cursor discovers hooks" \
+  "Hooks" \
+  syllago add --from cursor --no-input
+
+assert_output_contains "cursor discovers code-reviewer agent" \
+  "code-reviewer" \
+  syllago add --from cursor --no-input
+
 # -- Windsurf --
 assert_output_contains "windsurf discovers rules" \
   "Rules" \
   syllago add --from windsurf --no-input
 
+assert_output_contains "windsurf discovers greeting skill" \
+  "greeting" \
+  syllago add --from windsurf --no-input
+
 # -- Codex --
 assert_output_contains "codex discovers code-reviewer agent" \
   "code-reviewer" \
+  syllago add --from codex --no-input
+
+assert_output_contains "codex discovers greeting skill" \
+  "greeting" \
   syllago add --from codex --no-input
 
 # -- Copilot CLI --
@@ -62,6 +90,10 @@ assert_output_contains "copilot-cli discovers code-reviewer agent" \
 
 assert_output_contains "copilot-cli discovers summarize command" \
   "summarize" \
+  syllago add --from copilot-cli --no-input
+
+assert_output_contains "copilot-cli discovers greeting skill" \
+  "greeting" \
   syllago add --from copilot-cli --no-input
 
 # -- Zed --
@@ -77,6 +109,10 @@ assert_output_contains "cline discovers security rule" \
 # -- Roo Code --
 assert_output_contains "roo-code discovers security rule" \
   "security" \
+  syllago add --from roo-code --no-input
+
+assert_output_contains "roo-code discovers greeting skill" \
+  "greeting" \
   syllago add --from roo-code --no-input
 
 # -- OpenCode --

@@ -49,16 +49,22 @@ Always write tests alongside implementation code.
 
 **Format:** JSON (nested in settings.json)
 
-**Server entry fields:**
+**Server entry fields (STDIO):**
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `source` | string | Yes | Must be `"custom"` for user-defined servers |
 | `command` | string | Yes | Executable command |
 | `args` | string[] | No | Arguments for command |
 | `env` | object | No | Environment variables |
 
-**Transport:** Only stdio is currently supported. Streamable HTTP is an open feature request.
+**Server entry fields (Remote):**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `url` | string | Yes | SSE or Streamable HTTP endpoint URL |
+| `headers` | object | No | HTTP headers (e.g., auth tokens) |
+
+**Transport:** Stdio, SSE, and Streamable HTTP are supported.
 
 **Example:**
 
@@ -66,10 +72,15 @@ Always write tests alongside implementation code.
 {
   "context_servers": {
     "my-mcp-server": {
-      "source": "custom",
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path"],
       "env": {}
+    },
+    "remote-server": {
+      "url": "https://mcp.example.com/sse",
+      "headers": {
+        "Authorization": "Bearer <token>"
+      }
     }
   }
 }
@@ -158,6 +169,7 @@ Detection signals:
 - **No project-level MCP**: MCP is configured globally in settings.json
 - **Different MCP key**: Uses `context_servers` not `mcpServers`
 - **Extension-based MCP**: MCP servers can also be installed as Zed extensions
+- **External agents**: Supports ACP (Agent Client Protocol) for running third-party agents (Gemini CLI, Claude Agent, Codex, etc.) via `agent_servers` in settings.json
 - **Rules Library**: IDE-managed reusable rules with `@-mention` support (not filesystem-based)
 - **Template overrides**: Advanced Handlebars template system for system prompt customization (`~/.config/zed/prompt_overrides/*.hbs`)
 - **Inline alternatives**: Can send same prompt to multiple models simultaneously for A/B comparison

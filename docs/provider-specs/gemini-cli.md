@@ -4,7 +4,7 @@ Provider slug: `gemini-cli`
 
 Supports: Rules, Commands, Skills, Agents, Hooks, MCP
 
-Sources: [geminicli.com](https://geminicli.com/docs/), [GitHub](https://github.com/google-gemini/gemini-cli)
+Sources: [geminicli.com](https://geminicli.com/docs/), [GitHub](https://github.com/google-gemini/gemini-cli), [Hooks reference](https://geminicli.com/docs/hooks/reference/), [Skills](https://geminicli.com/docs/cli/skills/), [Subagents](https://geminicli.com/docs/core/subagents/)
 
 ---
 
@@ -148,8 +148,8 @@ Five-phase review process:
 | `tools` | string[] | No | all | Tool allowlist (Gemini tool names: `read_file`, `grep_search`, etc.) |
 | `model` | string | No | inherit | Model version (e.g., `gemini-2.5-pro`) |
 | `temperature` | float | No | — | Response variability, 0.0-2.0 |
-| `max_turns` | int | No | 15 | Max conversation turns |
-| `timeout_mins` | int | No | 5 | Max execution time in minutes |
+| `max_turns` | int | No | 30 | Max conversation turns |
+| `timeout_mins` | int | No | 10 | Max execution time in minutes |
 
 **Body:** System prompt defining agent behavior.
 

@@ -165,7 +165,7 @@ assert_roundtrip "skill round-trip through kiro" \
 
 # -- Agents: body-only round-trip (model metadata lost through markdown providers) --
 assert_roundtrip_body "agent body round-trip through copilot-cli" \
-  code-reviewer copilot-cli ".copilot/agents/code-reviewer.md" agents "$RT_TMP/baseline-agent.md"
+  code-reviewer copilot-cli ".copilot/agents/code-reviewer.agent.md" agents "$RT_TMP/baseline-agent.md"
 
 assert_roundtrip_body "agent body round-trip through opencode" \
   code-reviewer opencode ".opencode/agents/code-reviewer.md" agents "$RT_TMP/baseline-agent.md"

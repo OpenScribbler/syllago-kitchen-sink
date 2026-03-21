@@ -5,5 +5,21 @@
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"],
       "env": {}
     }
+  },
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .gemini/hooks/log-tool.sh",
+            "name": "log-tool-use",
+            "timeout": 5000,
+            "description": "Log all tool usage for auditing"
+          }
+        ]
+      }
+    ]
   }
 }

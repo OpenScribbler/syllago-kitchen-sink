@@ -72,7 +72,7 @@ assert_file_exists "install command to copilot-cli" \
 # -- OpenCode (user-level: ~/.config/opencode/) --
 syllago install greeting --to opencode --type skills --method copy --no-input 2>/dev/null || true
 assert_file_exists "install skill to opencode" \
-  "$HOME/.config/opencode/skill/greeting/SKILL.md"
+  "$HOME/.config/opencode/skills/greeting/SKILL.md"
 
 syllago install summarize --to opencode --type commands --method copy --no-input 2>/dev/null || true
 assert_file_exists "install command to opencode" \

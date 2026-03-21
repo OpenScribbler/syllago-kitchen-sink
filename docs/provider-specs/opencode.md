@@ -93,11 +93,18 @@ Structure follows a similar pattern to Claude Code commands.
 
 ## Skills
 
-**Location:** `<project>/.opencode/skill/` (per azat-io/ai-config reference)
+**Location:** `.opencode/skills/<name>/SKILL.md` (project) or `~/.config/opencode/skills/<name>/SKILL.md` (global)
 
-**Format:** Markdown
+**Format:** YAML frontmatter + markdown body
 
-Limited documentation available. The azat-io/ai-config project creates skills in this directory for OpenCode.
+**Frontmatter fields:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Skill identifier |
+| `description` | string | Yes | What the skill does |
+
+Follows the Agent Skills open standard. Singular directory name (`skill/`) also supported for backwards compatibility.
 
 ---
 

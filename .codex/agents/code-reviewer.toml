@@ -1,7 +1,8 @@
 [agent]
 name = "code-reviewer"
 description = "Review code changes for quality and security issues"
-model = "o4-mini"
+model = "sonnet"
+tools = ["read_file", "grep_files", "list_dir", "shell"]
 
 [agent.instructions]
 content = "Review code changes for security vulnerabilities, performance issues, and adherence to project conventions. Flag any use of deprecated APIs. Suggest improvements for readability and maintainability."

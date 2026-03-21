@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "command": "echo 'pre-commit lint check'",
+            "timeout_seconds": 5
+          }
+        ]
+      }
+    ]
+  }
+}
