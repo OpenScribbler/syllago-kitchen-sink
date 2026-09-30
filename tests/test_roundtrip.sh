@@ -60,7 +60,10 @@ assert_roundtrip() {
   cp "$converted" "$PROJECT_DIR/$fixture_path"
 
   # Re-import from provider
-  syllago add "$add_type" --from "$provider" --force --no-input --quiet 2>/dev/null || true
+  if ! syllago add "$add_type" --from "$provider" --force --no-input --quiet 2>/dev/null; then
+    fail "$description (re-import from $provider failed)"
+    return
+  fi
 
   # Convert back to claude-code
   if ! syllago convert "$item" --to claude-code --output "$roundtripped" 2>/dev/null; then
@@ -102,7 +105,10 @@ assert_roundtrip_body() {
 
   mkdir -p "$(dirname "$PROJECT_DIR/$fixture_path")"
   cp "$converted" "$PROJECT_DIR/$fixture_path"
-  syllago add "$add_type" --from "$provider" --force --no-input --quiet 2>/dev/null || true
+  if ! syllago add "$add_type" --from "$provider" --force --no-input --quiet 2>/dev/null; then
+    fail "$description (re-import from $provider failed)"
+    return
+  fi
 
   if ! syllago convert "$item" --to claude-code --output "$roundtripped" 2>/dev/null; then
     fail "$description (convert back to claude-code failed)"
