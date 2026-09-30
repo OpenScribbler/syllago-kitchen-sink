@@ -173,6 +173,9 @@ assert_roundtrip_body "agent body round-trip through opencode" \
 assert_roundtrip_body "agent body round-trip through gemini-cli" \
   code-reviewer gemini-cli ".gemini/agents/code-reviewer.md" agents "$RT_TMP/baseline-agent.md"
 
+assert_roundtrip_body "agent body round-trip through devin" \
+  code-reviewer devin ".devin/agents/code-reviewer.md" agents "$RT_TMP/baseline-agent.md"
+
 # NOTE: Codex agent round-trip skipped — syllago outputs multi-agent TOML format
 # that the single-agent importer can't parse back (known bug).
 # NOTE: Kiro agent round-trip skipped — JSON file:// prompt references and

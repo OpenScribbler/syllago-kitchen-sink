@@ -92,6 +92,9 @@ convert_and_check "convert code-reviewer agent to gemini-cli" \
 convert_and_check "convert code-reviewer agent to cursor" \
   code-reviewer cursor "$GOLDEN_DIR/cursor/agents/code-reviewer.md"
 
+convert_and_check "convert code-reviewer agent to devin" \
+  code-reviewer devin "$GOLDEN_DIR/devin/agents/code-reviewer.md"
+
 # -- Skills to providers that support them --
 convert_and_check "convert greeting skill to cursor" \
   greeting cursor "$GOLDEN_DIR/cursor/skills/greeting/SKILL.md"
