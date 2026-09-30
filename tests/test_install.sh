@@ -4,7 +4,8 @@
 #
 # NOTE: syllago install writes to user-level paths ($HOME/...), NOT project-level.
 # Project-scoped providers (zed, cline, roo-code, kiro rules) skip install.
-# Agent install has a known bug (AGENT.md vs agent.md case mismatch).
+# Agents install as a copy rendered in the target provider's format, even
+# when the default symlink method is requested.
 # See test_convert.sh for comprehensive golden file format validation.
 #
 # Requires library to be populated (via add suite or --seed flag).
@@ -78,6 +79,43 @@ assert_file_exists "install skill to opencode" \
 syllago install summarize --to opencode --type commands --method copy --no-input 2>/dev/null || true
 assert_file_exists "install command to opencode" \
   "$HOME/.config/opencode/commands/command.md"
+
+# -- Agents (library agent was last added from gemini-cli) --
+syllago install code-reviewer --to claude-code --type agents --no-input 2>/dev/null || true
+assert_file_contains "install agent to claude-code uses Claude tool names" \
+  "$HOME/.claude/agents/code-reviewer.md" "Read"
+if [[ -L "$HOME/.claude/agents/code-reviewer.md" ]]; then
+  fail "install agent to claude-code writes a file, not a symlink"
+else
+  pass "install agent to claude-code writes a file, not a symlink"
+fi
+
+syllago install code-reviewer --to devin --type agents --no-input 2>/dev/null || true
+assert_file_contains "install agent to devin uses allowed-tools" \
+  "$HOME/.config/devin/agents/code-reviewer.md" "allowed-tools:"
+
+syllago install code-reviewer --to cursor --type agents --no-input 2>/dev/null || true
+assert_file_contains "install agent to cursor has body" \
+  "$HOME/.cursor/agents/code-reviewer.md" "security vulnerabilities"
+
+syllago install code-reviewer --to gemini-cli --type agents --no-input 2>/dev/null || true
+assert_file_contains "install agent to gemini-cli uses Gemini tool names" \
+  "$HOME/.gemini/agents/code-reviewer.md" "run_shell_command"
+
+syllago install code-reviewer --to codex --type agents --no-input 2>/dev/null || true
+assert_file_contains "install agent to codex renders TOML" \
+  "$HOME/.codex/agents/code-reviewer.toml" "developer_instructions"
+
+syllago install code-reviewer --to copilot-cli --type agents --no-input 2>/dev/null || true
+assert_file_exists "install agent to copilot-cli" \
+  "$HOME/.github/agents/code-reviewer.agent.md"
+
+syllago uninstall code-reviewer --from devin --force --no-input 2>/dev/null || true
+if [[ -e "$HOME/.config/devin/agents/code-reviewer.md" ]]; then
+  fail "uninstall agent from devin removes the file"
+else
+  pass "uninstall agent from devin removes the file"
+fi
 
 # -- Negative tests --
 assert_exit_nonzero "install to unknown provider fails" \
