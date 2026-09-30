@@ -4,7 +4,7 @@
 #
 # Library structure:
 #   rules/<provider>/<name>/rule.md        (provider-scoped, named subdir)
-#   rules/<provider>/rule.md               (provider-scoped, flat — windsurf/zed)
+#   rules/<provider>/rule.md               (provider-scoped, flat — devin/zed)
 #   agents/<name>/agent.md                 (global)
 #   skills/<name>/SKILL.md                 (global)
 #   commands/<provider>/<name>/command.md   (provider-scoped)
@@ -40,11 +40,11 @@ assert_file_exists "cursor: security rule in library" \
 assert_file_contains "cursor: rule body survived mdc conversion" \
   "$LIBRARY/rules/cursor/security/rule.md" "validate user input"
 
-# -- Windsurf (single concatenated rule → flat file) --
-syllago add rules --from windsurf --force --no-input 2>/dev/null || true
+# -- Devin Desktop (single concatenated rule → flat file) --
+syllago add rules --from devin --force --no-input 2>/dev/null || true
 
-assert_file_exists "windsurf: rule in library" \
-  "$LIBRARY/rules/windsurf/rule.md"
+assert_file_exists "devin: rule in library" \
+  "$LIBRARY/rules/devin/rule.md"
 
 # -- Codex --
 syllago add --all --from codex --force --no-input 2>/dev/null || true

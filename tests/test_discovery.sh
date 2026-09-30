@@ -72,14 +72,14 @@ assert_output_contains "cursor discovers code-reviewer agent" \
   "code-reviewer" \
   syllago add --from cursor --no-input
 
-# -- Windsurf --
-assert_output_contains "windsurf discovers rules" \
+# -- Devin Desktop --
+assert_output_contains "devin discovers rules" \
   "Rules" \
-  syllago add --from windsurf --no-input
+  syllago add --from devin --no-input
 
-assert_output_contains "windsurf discovers greeting skill" \
+assert_output_contains "devin discovers greeting skill" \
   "greeting" \
-  syllago add --from windsurf --no-input
+  syllago add --from devin --no-input
 
 # -- Codex --
 assert_output_contains "codex discovers code-reviewer agent" \

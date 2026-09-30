@@ -36,8 +36,15 @@ convert_and_check "convert security rule to claude-code" \
 convert_and_check "convert security rule to cursor" \
   security cursor "$GOLDEN_DIR/cursor/rules/security.mdc"
 
-convert_and_check "convert security rule to windsurf" \
-  security windsurf "$GOLDEN_DIR/windsurf/rules/security.md"
+convert_and_check "convert security rule to devin" \
+  security devin "$GOLDEN_DIR/devin/rules/security.md"
+
+# The retired slug windsurf still resolves to devin.
+convert_and_check "convert security rule via retired slug windsurf" \
+  security windsurf "$GOLDEN_DIR/devin/rules/security.md"
+assert_output_contains "retired slug windsurf prints a deprecation warning" \
+  'renamed to "devin"' \
+  syllago convert security --to windsurf --output "$CONVERT_TMP/windsurf-alias-warning.md"
 
 convert_and_check "convert security rule to zed" \
   security zed "$GOLDEN_DIR/zed/rules/security.md"
@@ -104,8 +111,8 @@ convert_and_check "convert greeting skill to gemini-cli" \
 convert_and_check "convert greeting skill to claude-code" \
   greeting claude-code "$GOLDEN_DIR/claude-code/skills/greeting/SKILL.md"
 
-convert_and_check "convert greeting skill to windsurf" \
-  greeting windsurf "$GOLDEN_DIR/windsurf/skills/greeting/SKILL.md"
+convert_and_check "convert greeting skill to devin" \
+  greeting devin "$GOLDEN_DIR/devin/skills/greeting/SKILL.md"
 
 convert_and_check "convert greeting skill to roo-code" \
   greeting roo-code "$GOLDEN_DIR/roo-code/skills/greeting/SKILL.md"

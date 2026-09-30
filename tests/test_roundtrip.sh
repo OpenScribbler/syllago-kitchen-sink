@@ -128,8 +128,8 @@ assert_roundtrip_body() {
 assert_roundtrip "rule round-trip through cursor" \
   security cursor ".cursor/rules/security.mdc" rules "$RT_TMP/baseline-rule.md"
 
-assert_roundtrip "rule round-trip through windsurf" \
-  security windsurf ".windsurfrules" rules "$RT_TMP/baseline-rule.md"
+assert_roundtrip "rule round-trip through devin" \
+  security devin ".windsurfrules" rules "$RT_TMP/baseline-rule.md"
 
 assert_roundtrip "rule round-trip through cline" \
   security cline ".clinerules/security.md" rules "$RT_TMP/baseline-rule.md"

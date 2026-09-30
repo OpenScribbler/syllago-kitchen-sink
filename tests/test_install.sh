@@ -39,11 +39,11 @@ assert_file_exists "install rule to cursor" \
 assert_file_contains "install rule to cursor has body" \
   "$HOME/.cursor/rule.mdc" "validate user input"
 
-# -- Windsurf (user-level: ~/.codeium/windsurf/) --
-syllago install security --to windsurf --type rules --method copy --no-input 2>/dev/null || true
-assert_file_exists "install rule to windsurf" \
+# -- Devin Desktop (user-level: ~/.codeium/windsurf/) --
+syllago install security --to devin --type rules --method copy --no-input 2>/dev/null || true
+assert_file_exists "install rule to devin" \
   "$HOME/.codeium/windsurf/rule.md"
-assert_file_contains "install rule to windsurf has body" \
+assert_file_contains "install rule to devin has body" \
   "$HOME/.codeium/windsurf/rule.md" "validate user input"
 
 # -- Gemini CLI (user-level: ~/.gemini/) --

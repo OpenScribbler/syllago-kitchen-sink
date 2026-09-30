@@ -18,7 +18,7 @@ This repo contains fixture files for every AI coding tool provider that syllago 
 | Claude Code | Rules, skills, agents, commands, hooks, MCP |
 | Gemini CLI | Rules, skills, agents, commands, MCP |
 | Cursor | Rules (.mdc) |
-| Windsurf | Rules (.windsurfrules) |
+| Devin Desktop | Rules (.windsurfrules) |
 | Codex | Agents (TOML), shared AGENTS.md |
 | Copilot CLI | Rules, agents, commands, hooks, MCP |
 | Zed | Rules (.rules) |

@@ -1,6 +1,6 @@
-# Windsurf — Format Reference
+# Devin Desktop (formerly Windsurf) — Format Reference
 
-Provider slug: `windsurf`
+Provider slug: `devin` (the retired slug `windsurf` still resolves to it, with a deprecation warning)
 
 Supports: Rules, Skills, Workflows (Commands), Hooks, MCP
 
