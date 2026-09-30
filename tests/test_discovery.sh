@@ -53,9 +53,16 @@ assert_output_contains "cursor discovers greeting skill" \
   "greeting" \
   syllago add --from cursor --no-input
 
-assert_output_contains "cursor discovers summarize command" \
-  "summarize" \
-  syllago add --from cursor --no-input
+# Syllago dropped Cursor commands in 5f1ff631 (Cursor's docs now send command
+# users to skills), so the summarize fixture must not be discovered.
+cursor_out=$(syllago add --from cursor --no-input 2>&1) && cursor_rc=0 || cursor_rc=$?
+if [[ $cursor_rc -ne 0 ]]; then
+  fail "cursor does not discover summarize command (syllago exited $cursor_rc)"
+elif [[ "$cursor_out" == *summarize* ]]; then
+  fail "cursor does not discover summarize command (commands unsupported)"
+else
+  pass "cursor does not discover summarize command (commands unsupported)"
+fi
 
 assert_output_contains "cursor discovers hooks" \
   "Hooks" \

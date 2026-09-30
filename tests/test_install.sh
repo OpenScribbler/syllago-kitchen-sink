@@ -62,8 +62,9 @@ assert_file_exists "install rule to codex" \
 
 # -- Copilot CLI (user-level: ~/.copilot/) --
 syllago install security --to copilot-cli --type rules --method copy --no-input 2>/dev/null || true
+# Always-apply rules render to copilot-instructions.md since syllago 5f8bfa23.
 assert_file_exists "install rule to copilot-cli" \
-  "$HOME/.copilot/rule.md"
+  "$HOME/.copilot/copilot-instructions.md"
 
 syllago install summarize --to copilot-cli --type commands --method copy --no-input 2>/dev/null || true
 assert_file_exists "install command to copilot-cli" \

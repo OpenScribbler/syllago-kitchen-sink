@@ -2,10 +2,10 @@
 name: code-reviewer
 description: Review code changes for quality and security issues
 tools:
-    - Read
-    - Grep
-    - Glob
-    - Bash
+    bash: true
+    glob: true
+    grep: true
+    read: true
 model: sonnet
 ---
 

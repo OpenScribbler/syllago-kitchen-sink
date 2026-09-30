@@ -86,7 +86,9 @@ assert_output_contains() {
   shift 2
   local output
   output=$("$@" 2>&1) || true
-  if echo "$output" | grep -qF "$expected"; then
+  # A here-string, not a pipe: with pipefail, grep -q exiting on the first
+  # match can SIGPIPE the writer and turn a match into a failure.
+  if grep -qF -- "$expected" <<< "$output"; then
     pass "$description"
   else
     fail "$description (expected output to contain: $expected)"
